@@ -19,16 +19,19 @@ export class ContatoController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.contatoService.findOne(+id);
+    // Removido o '+': agora passamos a string direto para o service
+    return this.contatoService.findOne(id); 
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateContatoDto: UpdateContatoDto) {
-    return this.contatoService.update(+id, updateContatoDto);
+    // Removido o '+': mantém o ID como string para o Prisma encontrar
+    return this.contatoService.update(id, updateContatoDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.contatoService.remove(+id);
+    // Removido o '+': evita erro de tipo se o seu ID no banco for string/uuid
+    return this.contatoService.remove(id);
   }
 }

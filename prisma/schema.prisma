@@ -9,5 +9,23 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
+}
+
+
+model User {
+  id       String    @id @default(uuid())
+  name     String
+  email    String    @unique
+  password String
+  contacts Contato[] // Relação: um usuário tem muitos contatos
+}
+
+model Contato {
+  id     String @id @default(uuid())
+  name   String
+  email  String
+  phone  String
+  userId String
+  user   User   @relation(fields: [userId], references: [id]) // Chave estrangeira
 }
