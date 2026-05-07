@@ -2,11 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/database/prisma.service';
+import { JwtService } from '@nestjs/jwt/dist/jwt.service';
+import { access } from 'fs';
 
 @Injectable()
 export class AuthService {
     constructor(
-        private readonly prisma: PrismaService
+        private readonly prisma: PrismaService,
+        private jwtService: JwtService
     ) {}
 
     async login(loginDto: LoginDto) {
@@ -23,8 +26,11 @@ export class AuthService {
         if (!isPasswordValid) {
             throw new Error('Senha incorreta');
         }
+        const payload = {email: user.email, sub: user.id};
 
-        return user;
+        return {
+            access_token: this.jwtService.sign(payload),
+        };
   }
 
 
